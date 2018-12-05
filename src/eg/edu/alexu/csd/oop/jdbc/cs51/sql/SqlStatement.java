@@ -9,18 +9,22 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import eg.edu.alexu.csd.oop.db.Database;
+import eg.edu.alexu.csd.oop.jdbc.cs51.parsers.ChooserParser;
+import eg.edu.alexu.csd.oop.jdbc.cs51.parsers.FunctionChooserParser;
 
 public class SqlStatement implements Statement {
 	private Connection connection;
 	private Queue<String> Batch;
 	private int queryTimeOut;
 	private Database database;
+	private ChooserParser functionChooserParser;
 
 	public SqlStatement(Connection connection, Database database) {
 		this.connection = connection;
 		Batch = new LinkedList<String>();
 		queryTimeOut = 1;
 		this.database = database;
+		functionChooserParser=new FunctionChooserParser();
 	}
 
 	@Override
@@ -62,6 +66,7 @@ public class SqlStatement implements Statement {
 		// connection.close();
 		Batch.clear();
 		Batch = null;
+		functionChooserParser=null;
 
 	}
 
@@ -73,7 +78,7 @@ public class SqlStatement implements Statement {
 
 	@Override
 	public boolean execute(String sql) throws SQLException {
-		throw new UnsupportedOperationException();
+		return (boolean)database.executeStructureQuery(sql);
 
 	}
 
@@ -98,11 +103,29 @@ public class SqlStatement implements Statement {
 	@Override
 	public int[] executeBatch() throws SQLException {
 		int[]returnValues=new int [Batch.size()];
-		for(int i=0;i<Batch.size();i++) {
+		int i=0;
+		while(!Batch.isEmpty()) {
 			String Query=Batch.poll();
-			//continue function
-			
-			
+			int parseReturn=functionChooserParser.getOutput(Query);
+			if(parseReturn==0) {
+				throw new SQLException();
+			}else if(parseReturn==1) {
+				boolean queryExecuted=(boolean) execute(Query);
+				if(queryExecuted) {
+					returnValues[i]=1;
+				}else {
+					returnValues[i]=0;
+				}
+				
+			}else if(parseReturn==2) {
+				returnValues[i]=executeUpdate(Query);
+				
+			}else if(parseReturn==3) {
+				executeQuery(Query);
+				returnValues[i]=0;
+				
+			}
+			i++;
 		}
 		return returnValues;
 		
@@ -111,14 +134,14 @@ public class SqlStatement implements Statement {
 
 	@Override
 	public ResultSet executeQuery(String sql) throws SQLException {
-		throw new UnsupportedOperationException();
+		//
+		return null;
 
 	}
 
 	@Override
 	public int executeUpdate(String sql) throws SQLException {
-		throw new UnsupportedOperationException();
-
+		return (int)database.executeUpdateQuery(sql);
 	}
 
 	@Override
