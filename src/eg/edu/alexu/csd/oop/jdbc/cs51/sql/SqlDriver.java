@@ -27,6 +27,8 @@ public class SqlDriver implements Driver {
 		throw new UnsupportedOperationException();
 
 	}
+	
+	/***************************** unused methods ******************************/
 
 	@Override
 	public int getMajorVersion() {
