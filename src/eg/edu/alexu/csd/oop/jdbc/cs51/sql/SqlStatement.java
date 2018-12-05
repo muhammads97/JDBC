@@ -100,6 +100,7 @@ public class SqlStatement implements Statement {
 		int[]returnValues=new int [Batch.size()];
 		for(int i=0;i<Batch.size();i++) {
 			String Query=Batch.poll();
+			//continue function
 			
 			
 		}
