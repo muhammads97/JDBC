@@ -37,7 +37,7 @@ public class SqlConnection implements Connection {
 
 	@Override
 	public Statement createStatement() throws SQLException {
-		return new SqlStatement(dbms);
+		return new SqlStatement(this, dbms);
 	}
 	/************************ unused **************************/
 	@Override
