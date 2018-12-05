@@ -5,8 +5,23 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
+import java.util.LinkedList;
+import java.util.Queue;
+
+import eg.edu.alexu.csd.oop.db.Database;
 
 public class SqlStatement implements Statement {
+	private Connection connection;
+	private Queue<String> Batch;
+	private int queryTimeOut;
+	private Database database;
+
+	public SqlStatement(Connection connection, Database database) {
+		this.connection = connection;
+		Batch = new LinkedList<String>();
+		queryTimeOut = 1;
+		this.database = database;
+	}
 
 	@Override
 	public boolean isWrapperFor(Class<?> iface) throws SQLException {
@@ -21,8 +36,7 @@ public class SqlStatement implements Statement {
 
 	@Override
 	public void addBatch(String sql) throws SQLException {
-		throw new UnsupportedOperationException();
-
+		Batch.add(sql);
 	}
 
 	@Override
@@ -33,7 +47,7 @@ public class SqlStatement implements Statement {
 
 	@Override
 	public void clearBatch() throws SQLException {
-		throw new UnsupportedOperationException();
+		Batch.clear();
 
 	}
 
@@ -45,7 +59,9 @@ public class SqlStatement implements Statement {
 
 	@Override
 	public void close() throws SQLException {
-		throw new UnsupportedOperationException();
+		// connection.close();
+		Batch.clear();
+		Batch = null;
 
 	}
 
@@ -81,7 +97,7 @@ public class SqlStatement implements Statement {
 
 	@Override
 	public int[] executeBatch() throws SQLException {
-		throw new UnsupportedOperationException();
+		
 
 	}
 
@@ -117,7 +133,7 @@ public class SqlStatement implements Statement {
 
 	@Override
 	public Connection getConnection() throws SQLException {
-		throw new UnsupportedOperationException();
+		return connection;
 
 	}
 
@@ -165,7 +181,7 @@ public class SqlStatement implements Statement {
 
 	@Override
 	public int getQueryTimeout() throws SQLException {
-		throw new UnsupportedOperationException();
+		return queryTimeOut;
 
 	}
 
@@ -267,7 +283,7 @@ public class SqlStatement implements Statement {
 
 	@Override
 	public void setQueryTimeout(int seconds) throws SQLException {
-		throw new UnsupportedOperationException();
+	queryTimeOut=seconds;
 
 	}
 
