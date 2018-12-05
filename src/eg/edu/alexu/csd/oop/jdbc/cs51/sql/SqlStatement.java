@@ -97,8 +97,15 @@ public class SqlStatement implements Statement {
 
 	@Override
 	public int[] executeBatch() throws SQLException {
+		int[]returnValues=new int [Batch.size()];
+		for(int i=0;i<Batch.size();i++) {
+			String Query=Batch.poll();
+			
+			
+		}
+		return returnValues;
 		
-
+		
 	}
 
 	@Override
