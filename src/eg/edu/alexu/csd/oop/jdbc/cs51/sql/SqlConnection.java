@@ -19,21 +19,27 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
-public class SqlConnection implements Connection {
+import eg.edu.alexu.csd.oop.db.Database;
+import eg.edu.alexu.csd.oop.db.cs51.DBMS;
 
+public class SqlConnection implements Connection {
+    private Database dbms;
+    
+    public SqlConnection(String path) {
+        dbms = new DBMS();
+        dbms.createDatabase(path, false);
+    }
+    
 	@Override
 	public void close() throws SQLException {
-		throw new UnsupportedOperationException();
-
+		dbms = null;
 	}
 
 	@Override
 	public Statement createStatement() throws SQLException {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
-
+		return new SqlStatement(this, dbms);
 	}
-
+	/************************ unused **************************/
 	@Override
 	public Statement createStatement(int resultSetType, int resultSetConcurrency) throws SQLException {
 		// TODO Auto-generated method stub
