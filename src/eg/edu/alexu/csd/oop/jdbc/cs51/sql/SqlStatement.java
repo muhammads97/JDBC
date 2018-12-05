@@ -8,6 +8,8 @@ import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import eg.edu.alexu.csd.oop.db.Database;
+
 public class SqlStatement implements Statement {
 	private Connection connection;
 	private Queue<String> Batch;
