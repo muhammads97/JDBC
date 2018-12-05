@@ -6,14 +6,10 @@ import java.sql.Driver;
 import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
-import java.util.LinkedList;
 import java.util.Properties;
-import java.util.Queue;
 import java.util.logging.Logger;
 
 public class SqlDriver implements Driver {
-
-	private Properties info;
 
 	@Override
 	public boolean acceptsURL(String url) throws SQLException {
@@ -39,10 +35,8 @@ public class SqlDriver implements Driver {
 		return null;
 
 	}
-	
-	/***************************** unused methods ******************************/
 
-	/*-----------------------------Unused functions--------------------------------------------*/
+	/***************************** unused methods ******************************/
 
 	@Override
 	public int getMajorVersion() {
