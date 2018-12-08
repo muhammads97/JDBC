@@ -23,11 +23,8 @@ public class SqlDriver implements Driver {
 			throw new UnsupportedOperationException();
 		}
 		File file = (File) info.get("path");
-		if (file.exists()) {
-			return new SqlConnection(file.getAbsolutePath());
-		} else {
-			throw new UnsupportedOperationException();
-		}
+		return new SqlConnection(file.getAbsolutePath());
+
 	}
 
 	@Override
