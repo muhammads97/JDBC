@@ -89,13 +89,12 @@ public class SqlStatement implements Statement {
 			database.executeUpdateQuery(sql);
 			return true;
 		} else if (parseReturn == 3) {
-			Object[][]arr=database.executeQuery(sql);
-			if(arr==null ||arr.length==0) {
+			ResultSet rs =database.executeQuery(sql);
+			if(rs==null) {
 				return false;
 			}
 			return true;
 		} else {
-
 			throw new SQLException();
 		}
 
@@ -153,9 +152,8 @@ public class SqlStatement implements Statement {
 
 	@Override
 	public ResultSet executeQuery(String sql) throws SQLException {
-		sql.trim().toLowerCase();
-		//
-		return null;
+		sql = sql.trim().toLowerCase();
+		return database.executeQuery(sql);
 
 	}
 
