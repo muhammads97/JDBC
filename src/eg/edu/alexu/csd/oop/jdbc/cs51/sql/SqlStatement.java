@@ -7,6 +7,13 @@ import java.sql.SQLWarning;
 import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import eg.edu.alexu.csd.oop.db.Database;
 import eg.edu.alexu.csd.oop.jdbc.cs51.parsers.ChooserParser;
@@ -18,6 +25,7 @@ public class SqlStatement implements Statement {
 	private int queryTimeOut;
 	private Database database;
 	private ChooserParser functionChooserParser;
+	private ExecutorService executorService;
 
 	public SqlStatement(Connection connection, Database database) {
 		this.connection = connection;
@@ -25,8 +33,10 @@ public class SqlStatement implements Statement {
 		queryTimeOut = 1;
 		this.database = database;
 		functionChooserParser = new FunctionChooserParser();
+		executorService=Executors.newSingleThreadExecutor();
+		
 	}
-
+	
 	@Override
 	public boolean isWrapperFor(Class<?> iface) throws SQLException {
 		throw new UnsupportedOperationException();
@@ -80,21 +90,36 @@ public class SqlStatement implements Statement {
 	@Override
 	public boolean execute(String sql) throws SQLException {
 		sql.trim().toLowerCase();
-		int parseReturn = functionChooserParser.getOutput(sql);
-
-		if (parseReturn == 1) {
-			return (boolean)database.executeStructureQuery(sql);
-			
-		} else if (parseReturn == 2) {
-			database.executeUpdateQuery(sql);
-			return true;
-		} else if (parseReturn == 3) {
-			ResultSet rs =database.executeQuery(sql);
-			if(rs==null) {
-				return false;
-			}
-			return true;
-		} else {
+		Object result=false;
+		Future<Boolean>future=executorService.submit(new task(result,sql,functionChooserParser,database));
+//		int parseReturn = functionChooserParser.getOutput(sql);
+//
+//		if (parseReturn == 1) { 
+//			return (boolean)database.executeStructureQuery(sql);
+//			
+//		} else if (parseReturn == 2) {
+//			database.executeUpdateQuery(sql);
+//			return true;
+//		} else if (parseReturn == 3) {
+//			ResultSet rs =database.executeQuery(sql);
+//			if(rs==null) {
+//				return false;
+//			}
+//			return true;
+//		} else {
+//			throw new SQLException();
+//		}
+		try {
+			result=future.get(queryTimeOut,TimeUnit.SECONDS);
+			return (boolean)result;
+		}catch(TimeoutException e) {
+			return false;
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+		
+			throw new SQLException();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
 			throw new SQLException();
 		}
 
@@ -337,4 +362,49 @@ public class SqlStatement implements Statement {
 
 	}
 
+}
+ class task implements Callable<Boolean>{
+	 private Object object;
+	private  String query;
+	private ChooserParser functionChooserParser;
+	private Database database;
+	 public  task(Object object,String query,ChooserParser functionChooserParser ,Database database) {
+		// TODO Auto-generated constructor stub
+		 this.object=object;
+		 this.query=query;
+		 this.functionChooserParser=functionChooserParser;
+		 this.database=database;
+	}
+
+	@Override
+	public Boolean call() throws Exception {
+		query=query.trim().toLowerCase();
+		int parseReturn = functionChooserParser.getOutput(query);
+
+		if (parseReturn == 1) {
+			object=(boolean)database.executeStructureQuery(query);
+			
+		} else if (parseReturn == 2) {
+			database.executeUpdateQuery(query);
+			object=true;
+		} else if (parseReturn == 3) {
+			ResultSet rs =database.executeQuery(query);
+			if(rs==null) {
+			object=false;
+			}else {
+				object= true;
+			}
+			
+		} else {
+			throw new SQLException();
+		}
+		return (boolean)object;
+	}
+	
+	
+	
+	
+	
+	
+	
 }

@@ -22,7 +22,6 @@ public class SqlDriver implements Driver {
 			// TODO Auto-generated catch block
 		}
 		return true;
-
 	}
 
 	@Override
