@@ -1,5 +1,6 @@
 package eg.edu.alexu.csd.oop.jdbc.cs51.sql;
 
+import java.io.IOException;
 import java.sql.Array;
 import java.sql.Blob;
 import java.sql.CallableStatement;
@@ -24,7 +25,8 @@ import eg.edu.alexu.csd.oop.db.cs51.DBMS;
 
 public class SqlConnection implements Connection {
     private Database dbms;
-    
+	private eg.edu.alexu.csd.oop.jdbc.cs51.log.Logger log;
+
     public SqlConnection(String path) {
         dbms = new DBMS();
         dbms.createDatabase(path, false);
@@ -32,11 +34,22 @@ public class SqlConnection implements Connection {
     
 	@Override
 	public void close() throws SQLException {
+		try {
+			log.getInstance().info("Connection closed");
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+		}
 		dbms = null;
 	}
 
 	@Override
 	public Statement createStatement() throws SQLException {
+		try {
+			log.getInstance().info("Statement created from connection");
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+		}
+		
 		return new SqlStatement(this, dbms);
 	}
 	/************************ unused **************************/

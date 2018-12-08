@@ -11,7 +11,7 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 public class SqlDriver implements Driver {
-	eg.edu.alexu.csd.oop.jdbc.cs51.log.Logger log;
+	private eg.edu.alexu.csd.oop.jdbc.cs51.log.Logger log;
 	
 
 	@Override

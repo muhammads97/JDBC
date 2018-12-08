@@ -43,13 +43,13 @@ public class Logger {
 	
 	
 	public void warnning(String msg) {
-		if((boolean) preferences.get("Log"))
+		if(preferences.get("Log").equals("true"))
 		logger.log(Level.WARNING, msg);
 		
 	}
 	
 	public void info(String msg) {
-		if((boolean) preferences.get("Log"))
+		if(preferences.get("Log").equals("true"))
 		logger.log(Level.INFO, msg);
 		
 	}

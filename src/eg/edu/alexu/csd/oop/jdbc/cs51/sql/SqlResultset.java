@@ -1,5 +1,6 @@
 package eg.edu.alexu.csd.oop.jdbc.cs51.sql;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.math.BigDecimal;
@@ -30,6 +31,7 @@ public class SqlResultset implements ResultSet {
     private Statement statement;
     private Object[][] rows;
     private int currentRow;
+	private eg.edu.alexu.csd.oop.jdbc.cs51.log.Logger log;
 
     public SqlResultset(Object[][] rows, ResultSetMetaData metaData) {
         this.metaData = metaData;
@@ -59,12 +61,27 @@ public class SqlResultset implements ResultSet {
     public boolean absolute(int row) throws SQLException {
         if (row > 0 && row < rows.length) {
             currentRow = row;
+            try {
+    			log.getInstance().info("curser set at row: "+ row);
+    		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+    			// TODO Auto-generated catch block
+    		}
             return true;
         } else if (row < 0 && Math.abs(row) < rows.length) {
             currentRow = rows.length - Math.abs(row) + 1;
+            try {
+    			log.getInstance().info("curser set at row: "+ currentRow);
+    		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+    			// TODO Auto-generated catch block
+    		}
             return true;
         } else {
             currentRow = 0;
+            try {
+    			log.getInstance().info("out of range row number, curser set at row zero");
+    		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+    			// TODO Auto-generated catch block
+    		}
             return false;
         }
 
@@ -72,11 +89,21 @@ public class SqlResultset implements ResultSet {
 
     @Override
     public void afterLast() throws SQLException {
+        try {
+			log.getInstance().info("curser set at row: "+ rows.length + " - after last");
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+		}
         currentRow = rows.length + 1;
     }
 
     @Override
     public void beforeFirst() throws SQLException {
+    	try {
+			log.getInstance().info("curser set at row zero - before first");
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+		}
         currentRow = 0;
     }
 
@@ -94,6 +121,11 @@ public class SqlResultset implements ResultSet {
 
     @Override
     public void close() throws SQLException {
+    	try {
+			log.getInstance().info("ResultSet closed");
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+		}
         this.metaData = null;
         this.rows = null;
         currentRow = 0;
@@ -110,9 +142,19 @@ public class SqlResultset implements ResultSet {
     public int findColumn(String columnLabel) throws SQLException {
         for (int i = 1; i <= metaData.getColumnCount(); i++) {
             if (metaData.getColumnLabel(i).equals(columnLabel)) {
+            	try {
+        			log.getInstance().info("Found column: "+columnLabel+" at index "+i);
+        		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+        			// TODO Auto-generated catch block
+        		}
                 return i;
             }
         }
+        try {
+			log.getInstance().warnning("couldnot find "+columnLabel);
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+		}
         throw new SQLException();
     }
 
@@ -120,8 +162,18 @@ public class SqlResultset implements ResultSet {
     public boolean first() throws SQLException {
         if (rows.length > 0) {
             currentRow = 1;
+            try {
+    			log.getInstance().info("Got first");
+    		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+    			// TODO Auto-generated catch block
+    		}
             return true;
         }
+        try {
+			log.getInstance().info("Empty resultset");
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+		}
         return false;
 
     }
@@ -341,10 +393,26 @@ public class SqlResultset implements ResultSet {
     @Override
     public int getInt(int columnIndex) throws SQLException {
         try {
-            if (rows[currentRow - 1][columnIndex - 1] == null)
+            if (rows[currentRow - 1][columnIndex - 1] == null) {
+            	try {
+        			log.getInstance().warnning("Wrong column index");
+        		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+        			// TODO Auto-generated catch block
+        		}
                 return 0;
+            }
+                try {
+        			log.getInstance().info("Value at column index "+columnIndex+" = "+ (int) rows[currentRow - 1][columnIndex - 1]);
+        		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+        			// TODO Auto-generated catch block
+        		}
             return (int) rows[currentRow - 1][columnIndex - 1];
         } catch (Exception e) {
+        	try {
+    			log.getInstance().warnning("couldnot get integer. i gusess it's string");
+    		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException ex) {
+    			// TODO Auto-generated catch block
+    		}
             throw new SQLException();
         }
     }
@@ -354,14 +422,30 @@ public class SqlResultset implements ResultSet {
         for (int i = 1; i <= metaData.getColumnCount(); i++) {
             if (metaData.getColumnLabel(i).equals(columnLabel)) {
                 try {
-                    if (rows[currentRow - 1][i - 1] == null)
+                    if (rows[currentRow - 1][i - 1] == null) {
+                    	try {
+                			log.getInstance().warnning("Wrong column label");
+                		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+                			// TODO Auto-generated catch block
+                		}
                         return 0;
+                    }
+                        try {
+                			log.getInstance().info("Value at column label "+columnLabel+" = "+ (int) rows[currentRow - 1][i - 1]);
+                		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+                			// TODO Auto-generated catch block
+                		}
                     return (int) rows[currentRow - 1][i - 1];
                 } catch (Exception e) {
                     throw new SQLException();
                 }
             }
         }
+        try {
+			log.getInstance().warnning("couldnot get integer. i gusess it's string");
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+		}
         throw new SQLException();
 
     }
@@ -380,6 +464,11 @@ public class SqlResultset implements ResultSet {
 
     @Override
     public ResultSetMetaData getMetaData() throws SQLException {
+    	try {
+			log.getInstance().info("metaData returned");
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+		}
         return metaData;
     }
 
@@ -422,8 +511,18 @@ public class SqlResultset implements ResultSet {
     @Override
     public Object getObject(int columnIndex) throws SQLException {
         try {
+        	try {
+    			log.getInstance().info("Value at column index " + columnIndex + " = "+rows[currentRow - 1][columnIndex - 1]);
+    		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+    			// TODO Auto-generated catch block
+    		}
             return rows[currentRow - 1][columnIndex - 1];
         } catch (Exception e) {
+        	try {
+    			log.getInstance().warnning("Wrong index");
+    		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException ex) {
+    			// TODO Auto-generated catch block
+    		}
             throw new SQLException();
         }
 
@@ -518,16 +617,37 @@ public class SqlResultset implements ResultSet {
 
     @Override
     public Statement getStatement() throws SQLException {
+    	try {
+			log.getInstance().info("return statement");
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+		}
         return statement;
     }
 
     @Override
     public String getString(int columnIndex) throws SQLException {
         try {
-            if (rows[currentRow - 1][columnIndex - 1] == null)
+            if (rows[currentRow - 1][columnIndex - 1] == null) {
+            	try {
+        			log.getInstance().warnning("Wrong index at getString");
+        		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+        			// TODO Auto-generated catch block
+        		}
                 return null;
+            }
+                try {
+        			log.getInstance().info("Value at column index " + columnIndex + " = "+rows[currentRow - 1][columnIndex - 1]);
+        		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+        			// TODO Auto-generated catch block
+        		}
             return (String) rows[currentRow - 1][columnIndex - 1];
         } catch (Exception e) {
+        	try {
+    			log.getInstance().warnning("Suppose to be string but integer");
+    		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException ex) {
+    			// TODO Auto-generated catch block
+    		}
             throw new SQLException();
         }
     }
@@ -537,13 +657,35 @@ public class SqlResultset implements ResultSet {
         for (int i = 1; i <= metaData.getColumnCount(); i++) {
             if (metaData.getColumnLabel(i).equals(columnLabel)) {
                 try {
-                    if (rows[currentRow - 1][i - 1] == null) return null;
+                    if (rows[currentRow - 1][i - 1] == null) {
+                    	try {
+                			log.getInstance().warnning("Wrong index at getString");
+                		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+                			// TODO Auto-generated catch block
+                		}
+                    	return null;
+                    }
+                    try {
+            			log.getInstance().info("Value at column label " + columnLabel + " = "+rows[currentRow - 1][i - 1]);
+            		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+            			// TODO Auto-generated catch block
+            		}
                     return (String) rows[currentRow - 1][i - 1];
                 } catch (Exception e) {
+                	try {
+            			log.getInstance().warnning("Suppose to be string but integer");
+            		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException ex) {
+            			// TODO Auto-generated catch block
+            		}
                     throw new SQLException();
                 }
             }
         }
+        try {
+			log.getInstance().warnning("wrong column label at get string");
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+		}
         throw new SQLException();
     }
 
@@ -642,31 +784,94 @@ public class SqlResultset implements ResultSet {
 
     @Override
     public boolean isAfterLast() throws SQLException {
-        if(currentRow > rows.length) return true;
+        if(currentRow > rows.length) {
+        	try {
+    			log.getInstance().info("after last true");
+    		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+    			// TODO Auto-generated catch block
+    		}
+        	return true;
+        }
+        try {
+			log.getInstance().info("after last false");
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+		}
+        
         return false;
     }
 
     @Override
     public boolean isBeforeFirst() throws SQLException {
-        if(currentRow == 0) return true;
+        if(currentRow == 0) {
+        	try {
+    			log.getInstance().info("before first true");
+    		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+    			// TODO Auto-generated catch block
+    		}
+        	
+        	return true;
+        }
+        try {
+			log.getInstance().info("before first false");
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+		}
         return false;
     }
 
     @Override
     public boolean isClosed() throws SQLException {
-        if(rows == null) return true;
+        if(rows == null) {
+        	
+        	try {
+    			log.getInstance().info("ResultSet closed");
+    		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+    			// TODO Auto-generated catch block
+    		}
+        	return true;
+        }
+        try {
+			log.getInstance().warnning("ResultSet couldnot close");
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+		}
         return false;
     }
 
     @Override
     public boolean isFirst() throws SQLException {
-        if(currentRow == 1) return true;
+        if(currentRow == 1) {
+        	try {
+    			log.getInstance().info("curser at first");
+    		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+    			// TODO Auto-generated catch block
+    		}
+        	return true;
+        }
+        try {
+			log.getInstance().info("curser isnot at first");
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+		}
         return false;
     }
 
     @Override
     public boolean isLast() throws SQLException {
-        if(currentRow == rows.length) return true;
+        if(currentRow == rows.length) {
+        	try {
+    			log.getInstance().info("curser at last");
+    		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+    			// TODO Auto-generated catch block
+    		}
+        	return true;
+        }
+        try {
+			log.getInstance().info("curser isnot at last");
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+		}
         return false;
     }
 
@@ -674,8 +879,18 @@ public class SqlResultset implements ResultSet {
     public boolean last() throws SQLException {
         if (rows.length > 0) {
             currentRow = rows.length;
+            try {
+    			log.getInstance().info("set curser at last");
+    		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+    			// TODO Auto-generated catch block
+    		}
             return true;
         }
+        try {
+			log.getInstance().warnning("curser couldnot set at last");
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+		}
         return false;
     }
 
@@ -695,9 +910,19 @@ public class SqlResultset implements ResultSet {
     public boolean next() throws SQLException {
         if(currentRow < rows.length) {
             currentRow++;
+            try {
+    			log.getInstance().info("next index");
+    		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+    			// TODO Auto-generated catch block
+    		}
             return true;
         } else {
             currentRow = rows.length + 1;
+            try {
+    			log.getInstance().info("has no next");
+    		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+    			// TODO Auto-generated catch block
+    		}
             return false;
         }
 
@@ -707,9 +932,19 @@ public class SqlResultset implements ResultSet {
     public boolean previous() throws SQLException {
         if(currentRow > 1) {
             currentRow--;
+            try {
+    			log.getInstance().info("previous index");
+    		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+    			// TODO Auto-generated catch block
+    		}
             return true;
         } else {
             currentRow = 0;
+            try {
+    			log.getInstance().info("has no previous");
+    		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+    			// TODO Auto-generated catch block
+    		}
             return false;
         }
     }
