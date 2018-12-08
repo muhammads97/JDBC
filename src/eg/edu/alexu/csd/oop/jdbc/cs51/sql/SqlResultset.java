@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import eg.edu.alexu.csd.oop.db.cs51.utilities.SqlResultset;
 
 public class SqlResultset implements ResultSet {
     private ResultSetMetaData metaData;
