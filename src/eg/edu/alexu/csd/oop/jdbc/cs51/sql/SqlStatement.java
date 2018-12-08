@@ -40,6 +40,7 @@ public class SqlStatement implements Statement {
 
 	@Override
 	public void addBatch(String sql) throws SQLException {
+		sql.trim().toLowerCase();
 		Batch.add(sql);
 	}
 
@@ -78,16 +79,20 @@ public class SqlStatement implements Statement {
 
 	@Override
 	public boolean execute(String sql) throws SQLException {
+		sql.trim().toLowerCase();
 		int parseReturn = functionChooserParser.getOutput(sql);
 
 		if (parseReturn == 1) {
-			database.executeStructureQuery(sql);
-			return false;
+			return (boolean)database.executeStructureQuery(sql);
+			
 		} else if (parseReturn == 2) {
 			database.executeUpdateQuery(sql);
-			return false;
+			return true;
 		} else if (parseReturn == 3) {
-			database.executeQuery(sql);
+			Object[][]arr=database.executeQuery(sql);
+			if(arr==null ||arr.length==0) {
+				return false;
+			}
 			return true;
 		} else {
 
@@ -120,6 +125,7 @@ public class SqlStatement implements Statement {
 		int i = 0;
 		while (!Batch.isEmpty()) {
 			String Query = Batch.poll();
+			Query.trim().toLowerCase();
 			int parseReturn = functionChooserParser.getOutput(Query);
 			if (parseReturn == 0) {
 				throw new SQLException();
@@ -147,6 +153,7 @@ public class SqlStatement implements Statement {
 
 	@Override
 	public ResultSet executeQuery(String sql) throws SQLException {
+		sql.trim().toLowerCase();
 		//
 		return null;
 
@@ -154,6 +161,7 @@ public class SqlStatement implements Statement {
 
 	@Override
 	public int executeUpdate(String sql) throws SQLException {
+		sql.trim().toLowerCase();
 		return (int) database.executeUpdateQuery(sql);
 	}
 
