@@ -108,7 +108,7 @@ public class SqlResultset implements ResultSet {
 
     @Override
     public int findColumn(String columnLabel) throws SQLException {
-        for (int i = 0; i < metaData.getColumnCount(); i++) {
+        for (int i = 1; i <= metaData.getColumnCount(); i++) {
             if (metaData.getColumnLabel(i).equals(columnLabel)) {
                 return i;
             }
@@ -341,9 +341,9 @@ public class SqlResultset implements ResultSet {
     @Override
     public int getInt(int columnIndex) throws SQLException {
         try {
-            if (rows[currentRow][columnIndex] == null)
+            if (rows[currentRow - 1][columnIndex - 1] == null)
                 return 0;
-            return (int) rows[currentRow][columnIndex];
+            return (int) rows[currentRow - 1][columnIndex - 1];
         } catch (Exception e) {
             throw new SQLException();
         }
@@ -351,12 +351,12 @@ public class SqlResultset implements ResultSet {
 
     @Override
     public int getInt(String columnLabel) throws SQLException {
-        for (int i = 0; i < metaData.getColumnCount(); i++) {
+        for (int i = 1; i <= metaData.getColumnCount(); i++) {
             if (metaData.getColumnLabel(i).equals(columnLabel)) {
                 try {
-                    if (rows[currentRow][i] == null)
+                    if (rows[currentRow - 1][i - 1] == null)
                         return 0;
-                    return (int) rows[currentRow][i];
+                    return (int) rows[currentRow - 1][i - 1];
                 } catch (Exception e) {
                     throw new SQLException();
                 }
@@ -422,7 +422,7 @@ public class SqlResultset implements ResultSet {
     @Override
     public Object getObject(int columnIndex) throws SQLException {
         try {
-            return rows[currentRow][columnIndex];
+            return rows[currentRow - 1][columnIndex - 1];
         } catch (Exception e) {
             throw new SQLException();
         }
@@ -524,9 +524,9 @@ public class SqlResultset implements ResultSet {
     @Override
     public String getString(int columnIndex) throws SQLException {
         try {
-            if (rows[currentRow][columnIndex] == null)
+            if (rows[currentRow - 1][columnIndex - 1] == null)
                 return null;
-            return (String) rows[currentRow][columnIndex];
+            return (String) rows[currentRow - 1][columnIndex - 1];
         } catch (Exception e) {
             throw new SQLException();
         }
@@ -534,11 +534,11 @@ public class SqlResultset implements ResultSet {
 
     @Override
     public String getString(String columnLabel) throws SQLException {
-        for (int i = 0; i < metaData.getColumnCount(); i++) {
+        for (int i = 1; i <= metaData.getColumnCount(); i++) {
             if (metaData.getColumnLabel(i).equals(columnLabel)) {
                 try {
-                    if (rows[currentRow][i] == null) return null;
-                    return (String) rows[currentRow][i];
+                    if (rows[currentRow - 1][i - 1] == null) return null;
+                    return (String) rows[currentRow - 1][i - 1];
                 } catch (Exception e) {
                     throw new SQLException();
                 }
