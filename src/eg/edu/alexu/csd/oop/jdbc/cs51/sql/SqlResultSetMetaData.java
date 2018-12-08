@@ -2,9 +2,19 @@ package eg.edu.alexu.csd.oop.jdbc.cs51.sql;
 
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.List;
 
 public class SqlResultSetMetaData implements ResultSetMetaData {
-
+    private List<String> columnNames;
+    private List<String> columnTypes;
+    private String tableName;
+    
+    public SqlResultSetMetaData(List<String> columnNames, List<String> columnTypes, String tableName) {
+        this.columnNames = columnNames;
+        this.columnTypes = columnTypes;
+        this.tableName = tableName;
+    }
+    
 	@Override
 	public boolean isWrapperFor(Class<?> arg0) throws SQLException {
 		// TODO Auto-generated method stub
@@ -31,8 +41,7 @@ public class SqlResultSetMetaData implements ResultSetMetaData {
 
 	@Override
 	public int getColumnCount() throws SQLException {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+		return columnNames.size();
 	}
 
 	@Override
@@ -43,20 +52,22 @@ public class SqlResultSetMetaData implements ResultSetMetaData {
 
 	@Override
 	public String getColumnLabel(int column) throws SQLException {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+		return columnNames.get(column - 1);
 	}
 
 	@Override
 	public String getColumnName(int column) throws SQLException {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+	    return columnNames.get(column - 1);
 	}
 
 	@Override
 	public int getColumnType(int column) throws SQLException {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+	    String type = columnTypes.get(column - 1);
+	    if(type.equalsIgnoreCase("varchar")) {
+	        return java.sql.Types.VARCHAR;
+	    } else {
+	        return java.sql.Types.INTEGER;
+	    }
 	}
 
 	@Override
@@ -85,8 +96,7 @@ public class SqlResultSetMetaData implements ResultSetMetaData {
 
 	@Override
 	public String getTableName(int column) throws SQLException {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+		return tableName;
 	}
 
 	@Override
