@@ -14,7 +14,6 @@ public class SqlDriver implements Driver {
 	@Override
 	public boolean acceptsURL(String url) throws SQLException {
 		return true;
-
 	}
 
 	@Override
