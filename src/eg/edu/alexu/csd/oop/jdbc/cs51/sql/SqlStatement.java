@@ -24,7 +24,7 @@ public class SqlStatement implements Statement {
 		Batch = new LinkedList<String>();
 		queryTimeOut = 1;
 		this.database = database;
-		functionChooserParser=new FunctionChooserParser();
+		functionChooserParser = new FunctionChooserParser();
 	}
 
 	@Override
@@ -40,6 +40,7 @@ public class SqlStatement implements Statement {
 
 	@Override
 	public void addBatch(String sql) throws SQLException {
+		sql.trim().toLowerCase();
 		Batch.add(sql);
 	}
 
@@ -66,7 +67,7 @@ public class SqlStatement implements Statement {
 		// connection.close();
 		Batch.clear();
 		Batch = null;
-		functionChooserParser=null;
+		functionChooserParser = null;
 
 	}
 
@@ -78,7 +79,24 @@ public class SqlStatement implements Statement {
 
 	@Override
 	public boolean execute(String sql) throws SQLException {
-		return (boolean)database.executeStructureQuery(sql);
+		sql.trim().toLowerCase();
+		int parseReturn = functionChooserParser.getOutput(sql);
+
+		if (parseReturn == 1) {
+			return (boolean)database.executeStructureQuery(sql);
+			
+		} else if (parseReturn == 2) {
+			database.executeUpdateQuery(sql);
+			return true;
+		} else if (parseReturn == 3) {
+			ResultSet rs =database.executeQuery(sql);
+			if(rs==null) {
+				return false;
+			}
+			return true;
+		} else {
+			throw new SQLException();
+		}
 
 	}
 
@@ -102,46 +120,47 @@ public class SqlStatement implements Statement {
 
 	@Override
 	public int[] executeBatch() throws SQLException {
-		int[]returnValues=new int [Batch.size()];
-		int i=0;
-		while(!Batch.isEmpty()) {
-			String Query=Batch.poll();
-			int parseReturn=functionChooserParser.getOutput(Query);
-			if(parseReturn==0) {
+		int[] returnValues = new int[Batch.size()];
+		int i = 0;
+		while (!Batch.isEmpty()) {
+			String Query = Batch.poll();
+			Query.trim().toLowerCase();
+			int parseReturn = functionChooserParser.getOutput(Query);
+			if (parseReturn == 0) {
 				throw new SQLException();
-			}else if(parseReturn==1) {
-				boolean queryExecuted=(boolean) execute(Query);
-				if(queryExecuted) {
-					returnValues[i]=1;
-				}else {
-					returnValues[i]=0;
+			} else if (parseReturn == 1) {
+				boolean queryExecuted = (boolean) execute(Query);
+				if (queryExecuted) {
+					returnValues[i] = 1;
+				} else {
+					returnValues[i] = 0;
 				}
-				
-			}else if(parseReturn==2) {
-				returnValues[i]=executeUpdate(Query);
-				
-			}else if(parseReturn==3) {
+
+			} else if (parseReturn == 2) {
+				returnValues[i] = executeUpdate(Query);
+
+			} else if (parseReturn == 3) {
 				executeQuery(Query);
-				returnValues[i]=0;
-				
+				returnValues[i] = 0;
+
 			}
 			i++;
 		}
 		return returnValues;
-		
-		
+
 	}
 
 	@Override
 	public ResultSet executeQuery(String sql) throws SQLException {
-		//
-		return null;
+		sql = sql.trim().toLowerCase();
+		return database.executeQuery(sql);
 
 	}
 
 	@Override
 	public int executeUpdate(String sql) throws SQLException {
-		return (int)database.executeUpdateQuery(sql);
+		sql.trim().toLowerCase();
+		return (int) database.executeUpdateQuery(sql);
 	}
 
 	@Override
@@ -314,7 +333,7 @@ public class SqlStatement implements Statement {
 
 	@Override
 	public void setQueryTimeout(int seconds) throws SQLException {
-	queryTimeOut=seconds;
+		queryTimeOut = seconds;
 
 	}
 
