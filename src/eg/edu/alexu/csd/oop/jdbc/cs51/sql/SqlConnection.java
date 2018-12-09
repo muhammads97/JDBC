@@ -22,10 +22,10 @@ import java.util.concurrent.Executor;
 
 import eg.edu.alexu.csd.oop.db.Database;
 import eg.edu.alexu.csd.oop.db.cs51.DBMS;
+import eg.edu.alexu.csd.oop.jdbc.cs51.log.Logger;
 
 public class SqlConnection implements Connection {
     private Database dbms;
-	private eg.edu.alexu.csd.oop.jdbc.cs51.log.Logger log;
 
     public SqlConnection(String path) {
         dbms = new DBMS();
@@ -35,7 +35,7 @@ public class SqlConnection implements Connection {
 	@Override
 	public void close() throws SQLException {
 		try {
-			log.getInstance().info("Connection closed");
+			Logger.getInstance().info("Connection closed");
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
 			// TODO Auto-generated catch block
 		}
@@ -45,7 +45,7 @@ public class SqlConnection implements Connection {
 	@Override
 	public Statement createStatement() throws SQLException {
 		try {
-			log.getInstance().info("Statement created from connection");
+			Logger.getInstance().info("Statement created from connection");
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
 			// TODO Auto-generated catch block
 		}

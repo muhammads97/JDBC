@@ -1,5 +1,6 @@
 package eg.edu.alexu.csd.oop.jdbc.cs51.sql;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import eg.edu.alexu.csd.oop.db.Database;
+import eg.edu.alexu.csd.oop.jdbc.cs51.log.Logger;
 import eg.edu.alexu.csd.oop.jdbc.cs51.parsers.ChooserParser;
 import eg.edu.alexu.csd.oop.jdbc.cs51.parsers.FunctionChooserParser;
 
@@ -52,6 +54,11 @@ public class SqlStatement implements Statement {
 	public void addBatch(String sql) throws SQLException {
 		sql.trim().toLowerCase();
 		Batch.add(sql);
+		try {
+			Logger.getInstance().info("added query : \"" + sql + "\" to batch");
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+		}
 	}
 
 	@Override
@@ -63,6 +70,11 @@ public class SqlStatement implements Statement {
 	@Override
 	public void clearBatch() throws SQLException {
 		Batch.clear();
+		try {
+			Logger.getInstance().info("batch cleared");
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+		}
 
 	}
 
@@ -78,6 +90,11 @@ public class SqlStatement implements Statement {
 		Batch.clear();
 		Batch = null;
 		functionChooserParser = null;
+		try {
+			Logger.getInstance().info("Statement Closed");
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+		}
 
 	}
 
@@ -111,15 +128,33 @@ public class SqlStatement implements Statement {
 //		}
 		try {
 			result=future.get(queryTimeOut,TimeUnit.SECONDS);
+			try {
+				Logger.getInstance().info("query \"" + sql + "\" excuted");
+			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+				// TODO Auto-generated catch block
+			}
 			return (boolean)result;
 		}catch(TimeoutException e) {
+			try {
+				Logger.getInstance().info("query \"" + sql + "\" want executed due to time limit exceeded");
+			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException ex) {
+				// TODO Auto-generated catch block
+			}
 			return false;
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
-		
+			try {
+				Logger.getInstance().info("query \"" + sql + "\" wasnt excuted due to inturruption");
+			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException ex) {
+				// TODO Auto-generated catch block
+			}
 			throw new SQLException();
 		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
+			try {
+				Logger.getInstance().info("query \"" + sql + "\" wasnt excuted due to wrong query");
+			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException ex) {
+				// TODO Auto-generated catch block
+			}
 			throw new SQLException();
 		}
 
@@ -171,6 +206,11 @@ public class SqlStatement implements Statement {
 			}
 			i++;
 		}
+		try {
+			Logger.getInstance().info("batch executed");
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+		}
 		return returnValues;
 
 	}
@@ -178,6 +218,11 @@ public class SqlStatement implements Statement {
 	@Override
 	public ResultSet executeQuery(String sql) throws SQLException {
 		sql = sql.trim().toLowerCase();
+		try {
+			Logger.getInstance().info("query \""+ sql + "\" executed");
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+		}
 		return database.executeQuery(sql);
 
 	}
@@ -185,6 +230,11 @@ public class SqlStatement implements Statement {
 	@Override
 	public int executeUpdate(String sql) throws SQLException {
 		sql.trim().toLowerCase();
+		try {
+			Logger.getInstance().info("query update \""+ sql + "\" executed");
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+		}
 		return (int) database.executeUpdateQuery(sql);
 	}
 
@@ -208,6 +258,11 @@ public class SqlStatement implements Statement {
 
 	@Override
 	public Connection getConnection() throws SQLException {
+		try {
+			Logger.getInstance().info("connection returned");
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+		}
 		return connection;
 
 	}
@@ -256,6 +311,11 @@ public class SqlStatement implements Statement {
 
 	@Override
 	public int getQueryTimeout() throws SQLException {
+		try {
+			Logger.getInstance().info("query time out returned");
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+		}
 		return queryTimeOut;
 
 	}
@@ -358,6 +418,11 @@ public class SqlStatement implements Statement {
 
 	@Override
 	public void setQueryTimeout(int seconds) throws SQLException {
+		try {
+			Logger.getInstance().info("query time out set to " + seconds + " seconds");
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+		}
 		queryTimeOut = seconds;
 
 	}
