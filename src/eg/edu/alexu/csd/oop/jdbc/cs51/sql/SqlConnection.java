@@ -21,6 +21,7 @@ import java.util.concurrent.Executor;
 
 import eg.edu.alexu.csd.oop.db.Database;
 import eg.edu.alexu.csd.oop.db.cs51.DBMS;
+import eg.edu.alexu.csd.oop.db.cs51.database.CurrentDatabase;
 
 public class SqlConnection implements Connection {
     private Database dbms;
@@ -32,7 +33,11 @@ public class SqlConnection implements Connection {
     
 	@Override
 	public void close() throws SQLException {
-		dbms = null;
+	    if(CurrentDatabase.getInstance().getPath() != null) {
+	        CurrentDatabase.getInstance().shutdown();
+	    }
+		
+	    dbms = null;
 	}
 
 	@Override
