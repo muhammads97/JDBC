@@ -1,14 +1,17 @@
 package eg.edu.alexu.csd.oop.jdbc.cs51.sql;
 
+import java.io.IOException;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.List;
+
+import eg.edu.alexu.csd.oop.jdbc.cs51.log.Logger;
 
 public class SqlResultSetMetaData implements ResultSetMetaData {
     private List<String> columnNames;
     private List<String> columnTypes;
     private String tableName;
-    
+
     public SqlResultSetMetaData(List<String> columnNames, List<String> columnTypes, String tableName) {
         this.columnNames = columnNames;
         this.columnTypes = columnTypes;
@@ -41,6 +44,11 @@ public class SqlResultSetMetaData implements ResultSetMetaData {
 
 	@Override
 	public int getColumnCount() throws SQLException {
+		try {
+			Logger.getInstance().info("return column count");
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+		}
 		return columnNames.size();
 	}
 
@@ -52,11 +60,21 @@ public class SqlResultSetMetaData implements ResultSetMetaData {
 
 	@Override
 	public String getColumnLabel(int column) throws SQLException {
+		try {
+			Logger.getInstance().info("column label at index "+column+" = "+columnNames.get(column - 1));
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+		}
 		return columnNames.get(column - 1);
 	}
 
 	@Override
 	public String getColumnName(int column) throws SQLException {
+		try {
+			Logger.getInstance().info("column label at index "+column+" = "+columnNames.get(column - 1));
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+		}
 	    return columnNames.get(column - 1);
 	}
 
@@ -64,8 +82,18 @@ public class SqlResultSetMetaData implements ResultSetMetaData {
 	public int getColumnType(int column) throws SQLException {
 	    String type = columnTypes.get(column - 1);
 	    if(type.equalsIgnoreCase("varchar")) {
+	    	try {
+				Logger.getInstance().info("column type at index "+column+" = VARCHAR");
+			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+				// TODO Auto-generated catch block
+			}
 	        return java.sql.Types.VARCHAR;
 	    } else {
+	    	try {
+				Logger.getInstance().info("column type at index "+column+" = INTEGER");
+			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+				// TODO Auto-generated catch block
+			}
 	        return java.sql.Types.INTEGER;
 	    }
 	}
@@ -96,6 +124,11 @@ public class SqlResultSetMetaData implements ResultSetMetaData {
 
 	@Override
 	public String getTableName(int column) throws SQLException {
+		try {
+			Logger.getInstance().info("return table name");
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+		}
 		return tableName;
 	}
 
