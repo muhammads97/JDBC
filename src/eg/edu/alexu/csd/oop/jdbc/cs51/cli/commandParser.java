@@ -111,6 +111,11 @@ public class commandParser {
 					System.out.println("query result : " + i);
 				}
 			} catch (SQLException e) {
+				try {
+        			Logger.getInstance().warnning("wrong query");
+        		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException ex) {
+        			// TODO Auto-generated catch block
+        		}
 			}
         } else if (m3.matches()) {
             String query = m3.group(1);
@@ -224,14 +229,22 @@ public class commandParser {
             statement.execute(query);
            // System.out.println("Done!");
         } catch (SQLException e) {
-            //System.out.println("Wrong Query");
+        	try {
+    			Logger.getInstance().warnning("wrong query");
+    		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException ex) {
+    			// TODO Auto-generated catch block
+    		}
         }
     }
     private void executeUpdate(String query) {
         try {
             System.out.println("Updated : " + statement.executeUpdate(query));
         } catch (SQLException e) {
-            //System.out.println("Wrong Query");
+        	try {
+    			Logger.getInstance().warnning("wrong query");
+    		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException ex) {
+    			// TODO Auto-generated catch block
+    		}
         }
     }
     private void executeSelect(String query) {
@@ -247,7 +260,11 @@ public class commandParser {
                 System.out.println();
             }
         } catch (SQLException e) {
-            //System.out.println("Wrong Query");
+        	try {
+    			Logger.getInstance().warnning("wrong query");
+    		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException ex) {
+    			// TODO Auto-generated catch block
+    		}
         }
     }
 }

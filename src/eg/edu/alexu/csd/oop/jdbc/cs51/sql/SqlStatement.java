@@ -231,12 +231,13 @@ public class SqlStatement implements Statement {
 	@Override
 	public int executeUpdate(String sql) throws SQLException {
 		sql.trim().toLowerCase();
+		int result = (int) database.executeUpdateQuery(sql);
 		try {
 			Logger.getInstance().info("query update \""+ sql + "\" executed");
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
 			// TODO Auto-generated catch block
 		}
-		return (int) database.executeUpdateQuery(sql);
+		return result;
 	}
 
 	@Override
