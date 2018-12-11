@@ -87,6 +87,7 @@ public class SqlStatement implements Statement {
 	@Override
 	public void close() throws SQLException {
 		// connection.close();
+		executorService = null;
 		Batch.clear();
 		Batch = null;
 		functionChooserParser = null;

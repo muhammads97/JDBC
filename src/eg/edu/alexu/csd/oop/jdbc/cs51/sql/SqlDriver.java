@@ -46,8 +46,8 @@ public class SqlDriver implements Driver {
 
 	@Override
 	public DriverPropertyInfo[] getPropertyInfo(String url, Properties info) throws SQLException {
-		return null;
-
+		DriverPropertyInfo[] driverPropertyInfo = {(DriverPropertyInfo) info.get("path")};
+		return driverPropertyInfo;
 	}
 
 	/***************************** unused methods ******************************/

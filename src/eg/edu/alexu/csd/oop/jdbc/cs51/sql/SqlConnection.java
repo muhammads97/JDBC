@@ -22,11 +22,8 @@ import java.util.concurrent.Executor;
 
 import eg.edu.alexu.csd.oop.db.Database;
 import eg.edu.alexu.csd.oop.db.cs51.DBMS;
-<<<<<<< HEAD
 import eg.edu.alexu.csd.oop.db.cs51.database.CurrentDatabase;
-=======
 import eg.edu.alexu.csd.oop.jdbc.cs51.log.Logger;
->>>>>>> branch 'master' of https://muhammad_s97@bitbucket.org/Mostafanabil198/jdbc.git
 
 public class SqlConnection implements Connection {
     private Database dbms;

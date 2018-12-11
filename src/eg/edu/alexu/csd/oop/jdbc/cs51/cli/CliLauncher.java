@@ -12,7 +12,7 @@ public class CliLauncher {
         commandParser cp = new commandParser(d);
         while(true) {
             Scanner reader = new Scanner(System.in); 
-            cp.excute(reader.nextLine());
+           cp.excute(reader.nextLine());
         }
 
     }
